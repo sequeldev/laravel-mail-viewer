@@ -40,6 +40,13 @@ export default class Api {
     return (await Api.#request(`${Api.baseUrl}/emails/${id}/payload`)).data;
   }
 
+  static async downloadAttachment(email, attachemnt) {
+    const emailId = email.id ?? email;
+    const attachmentId = attachemnt.id ?? attachemnt;
+
+    return (await Api.#request(`${Api.baseUrl}/emails/${emailId}/download/${attachmentId}`)).data;
+  }
+
   static #defineAbortController(url, params) {
     const key = this.#abortControllerKey(url, params);
 

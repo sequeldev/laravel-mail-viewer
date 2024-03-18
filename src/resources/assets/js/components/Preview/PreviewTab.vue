@@ -12,8 +12,9 @@
         v-if="attachments.length"
         class="flex flex-wrap p-2 pt-1 mt-3"
       >
-        <div
+        <button
           v-for="(attachment, i) of attachments"
+          @click="download(email, attachment)"
           :key="`email-${email.id}-attachment-${i}`"
           class="flex border-solid border border-indigo-600 rounded-md text-white bg-indigo-400 py-1.5 pl-2 pr-3 mt-1 mr-1"
         >
@@ -32,7 +33,7 @@
             />
           </svg>
           <span v-text="attachment.name" />
-        </div>
+        </button>
       </div>
     </section>
   </Tab>
@@ -43,6 +44,7 @@ import {
   ref,
   watch,
 } from 'vue';
+import Api from '../../api/Api';
 
 export default {
   props: {
@@ -59,9 +61,16 @@ export default {
       attachments.value = Object.values(prop.email.attachments).filter(a => a.name);
     });
 
+    const download = async (email, attachment) => {
+      console.log(email.id, attachment, attachment.name);
+      const download = await Api.downloadAttachment(email, attachment);
+      console.log(download);
+    }
+
     return {
       attachments,
+      download
     };
-  },
+  }
 };
 </script>

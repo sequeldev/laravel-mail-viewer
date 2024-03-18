@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MasterRO\MailViewer\Controllers;
 
+use eXorus\PhpMimeMailParser\Parser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -44,5 +45,17 @@ class MailController extends Controller
             'success' => true,
             'data'    => $mailLog->payload,
         ]);
+    }
+
+    public function download(MailLog $mailLog, $filename)
+    {
+        $parser = new Parser();
+        $parser->setText($mailLog->payload);
+        $attachments = $parser->getAttachments();
+        foreach ($attachments as $attachment) {
+            echo 'Filename : '.$attachment->getFilename().'<br>';            
+            echo 'Filetype : '.$attachment->getContentType().'<br>';
+            echo 'MIME part string : '.$attachment->getMimePartStr().'<br>';
+        }
     }
 }
