@@ -53,12 +53,16 @@ class MailController extends Controller
         $mailParser = new MailMimeParser();
         $message = $mailParser->parse($mailLog->payload, false);
 
-        $att = $message->getAttachmentPart(0);                 // first attachment
-        echo $att->getHeaderValue(HeaderConsts::CONTENT_TYPE); // e.g. "text/plain"
-        echo $att->getHeaderParameter(                         // value of "charset" part
-            'content-type',
-            'charset'
-        );
-        echo $att->getContent();
+        $attachments = $message->getAllAttachmentParts();
+
+        foreach($attachments AS $attachment) {
+            if ($attachment->getFilename() !== $filename) {
+                continue;
+            }
+
+            return response()->streamDownload(function() use ($attachment) { echo $attachment->getContent(); }, $attachment->getFilename());
+        }
+
+        abort(404);
     }
 }

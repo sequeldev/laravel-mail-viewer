@@ -44,7 +44,7 @@ export default class Api {
     const emailId = email.id ?? email;
     const attachmentName = attachemnt.name ?? attachemnt;
 
-    return (await Api.#request(`${Api.baseUrl}/emails/${emailId}/download/${attachmentName}`)).data;
+    return `${Api.baseUrl}/emails/${emailId}/download/${attachmentName}`;
   }
 
   static #defineAbortController(url, params) {
