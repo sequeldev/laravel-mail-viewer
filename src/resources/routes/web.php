@@ -21,4 +21,7 @@ Route::group([
 
     Route::get('/emails/{mailLog}/payload', [MailController::class, 'payload'])
         ->name('payload');
+
+    Route::get('/emails/{mailLog}/download/{filename}', [MailController::class, 'download'])
+        ->name('download');
 });

@@ -22,7 +22,8 @@
         "illuminate/routing": "^9.0|^10.0|^11.0",
         "illuminate/support": "^9.0|^10.0|^11.0",
         "illuminate/view": "^9.0|^10.0|^11.0",
-        "php-mime-mail-parser/php-mime-mail-parser": "^1.0"
+        "php-mime-mail-parser/php-mime-mail-parser": "^1.0",
+        "zbateson/mail-mime-parser": "^2.4"
     },
     "require-dev": {
         "orchestra/testbench": "^7.0|^8.0|^9.0"

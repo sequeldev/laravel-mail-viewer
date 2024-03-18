@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace MasterRO\MailViewer\Controllers;
 
-use eXorus\PhpMimeMailParser\Parser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 use MasterRO\MailViewer\Models\MailLog;
 use MasterRO\MailViewer\Services\Resource;
+use ZBateson\MailMimeParser\Header\HeaderConsts;
+use ZBateson\MailMimeParser\MailMimeParser;
 
 class MailController extends Controller
 {
@@ -49,13 +50,15 @@ class MailController extends Controller
 
     public function download(MailLog $mailLog, $filename)
     {
-        $parser = new Parser();
-        $parser->setText($mailLog->payload);
-        $attachments = $parser->getAttachments();
-        foreach ($attachments as $attachment) {
-            echo 'Filename : '.$attachment->getFilename().'<br>';            
-            echo 'Filetype : '.$attachment->getContentType().'<br>';
-            echo 'MIME part string : '.$attachment->getMimePartStr().'<br>';
-        }
+        $mailParser = new MailMimeParser();
+        $message = $mailParser->parse($mailLog->payload, false);
+
+        $att = $message->getAttachmentPart(0);                 // first attachment
+        echo $att->getHeaderValue(HeaderConsts::CONTENT_TYPE); // e.g. "text/plain"
+        echo $att->getHeaderParameter(                         // value of "charset" part
+            'content-type',
+            'charset'
+        );
+        echo $att->getContent();
     }
 }
