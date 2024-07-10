@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 
+use Carbon\Carbon;
+
 /**
  * Class MailLog
  *
@@ -66,11 +68,15 @@ class MailLog extends Model
 
     public function getFormattedDateAttribute(): string
     {
-        return $this->date->format(config('mail-viewer.date_format'));
+        $timezone = 'Europe/Dublin';
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->attributes['date'], config('app.timezone'));
+        return $date->setTimezone($timezone)->format('d.m.Y');
     }
 
     public function getFormattedTimeAttribute(): string
     {
-        return $this->date->format(config('mail-viewer.time_format'));
+        $timezone = 'Europe/Dublin';
+        $date = Carbon::parse($this->attributes['date']);
+        return $date->setTimezone($timezone)->format('H:i:s');
     }
 }
